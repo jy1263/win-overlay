@@ -233,7 +233,7 @@ impl Overlay {
     }
 
     /// Spawn an overlay
-    pub fn create_overlay(target: HWND) -> Self {
+    pub fn create_overlay(target: HWND, window: HWND) -> Self {
         let mut wc = WNDCLASSEXA {
             cbSize: std::mem::size_of::<WNDCLASSEXA>() as u32,
             style: CS_HREDRAW | CS_VREDRAW,
@@ -265,24 +265,6 @@ impl Overlay {
 
         // our own style
         let styles = WS_EX_LAYERED | WS_EX_TRANSPARENT;
-
-        // create our own window
-        let window = unsafe {
-            CreateWindowExA(
-                styles,
-                native_str!("win-overlay::overlay"),
-                native_str!(""),
-                WS_POPUP | WS_VISIBLE,
-                rect.read().left,
-                rect.read().top,
-                rect.read().right - rect.read().left,
-                rect.read().bottom - rect.read().top,
-                std::ptr::null_mut(),
-                std::ptr::null_mut(),
-                std::ptr::null_mut(),
-                std::ptr::null_mut(),
-            )
-        };
 
         // test if we actually created the window
         if window.is_null() {
